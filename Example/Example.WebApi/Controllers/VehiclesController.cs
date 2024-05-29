@@ -30,4 +30,12 @@ public class VehiclesController : ControllerBase
         }
         return vehicle;
     }
+
+    [HttpPost]
+    public ActionResult<Vehicle> Insert(Vehicle vehicle)
+    {
+        _vehicles.Add(vehicle);
+
+        return vehicle;
+    }
 }
