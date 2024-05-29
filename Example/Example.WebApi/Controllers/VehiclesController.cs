@@ -22,7 +22,7 @@ public class VehiclesController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<Vehicle> Get(int id)
     {
-        var vehicle = _vehicles.SingleOrDefault(x => x.Id == id);
+        var vehicle = _vehicles.FirstOrDefault(x => x.Id == id);
 
         if (vehicle == default)
         {
@@ -32,7 +32,7 @@ public class VehiclesController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<Vehicle> Insert(Vehicle vehicle)
+    public ActionResult Insert(Vehicle vehicle)
     {
         _vehicles.Add(vehicle);
 
@@ -42,7 +42,7 @@ public class VehiclesController : ControllerBase
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
-        var vehicle = _vehicles.SingleOrDefault(x => x.Id == id);
+        var vehicle = _vehicles.FirstOrDefault(x => x.Id == id);
 
         if (vehicle == default)
         {
@@ -52,5 +52,31 @@ public class VehiclesController : ControllerBase
         _vehicles.RemoveAt(id);
 
         return NoContent();
+    }
+
+    [HttpPut]
+    public ActionResult Update(int id, Vehicle vehicle)
+    {
+        if (id != vehicle.Id)
+        {
+            return BadRequest();
+        }
+
+        var existingVehicle = _vehicles.FirstOrDefault(x => x.Id == id);
+
+        if (existingVehicle != default)
+        {
+            existingVehicle.Manufacturer = vehicle.Manufacturer;
+            existingVehicle.Model = vehicle.Model;
+            existingVehicle.Color = vehicle.Color;
+            existingVehicle.HorsePower = vehicle.HorsePower;
+        }
+        else
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+
     }
 }
