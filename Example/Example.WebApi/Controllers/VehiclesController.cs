@@ -36,6 +36,21 @@ public class VehiclesController : ControllerBase
     {
         _vehicles.Add(vehicle);
 
-        return vehicle;
+        return CreatedAtAction(nameof(Get), new { id = vehicle.Id }, vehicle);
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult Delete(int id)
+    {
+        var vehicle = _vehicles.SingleOrDefault(x => x.Id == id);
+
+        if (vehicle == default)
+        {
+            return NotFound();
+        }
+
+        _vehicles.RemoveAt(id);
+
+        return NoContent();
     }
 }
