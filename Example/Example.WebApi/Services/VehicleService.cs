@@ -6,7 +6,7 @@ public static class VehicleService
 {
     private static List<Vehicle> Vehicles { get; }
 
-    private static int NextId = 3;
+    private static int NextId = 5;
 
     static VehicleService()
     {
