@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Example.WebApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Example.WebApi.Controllers;
 [Route("api/[controller]")]
