@@ -1,4 +1,4 @@
-﻿namespace Example.WebApi;
+﻿namespace Example.WebApi.Models;
 
 public class Vehicle
 {

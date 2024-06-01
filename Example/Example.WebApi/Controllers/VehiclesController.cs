@@ -1,28 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Example.WebApi.Models;
+using Example.WebApi.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Example.WebApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class VehiclesController : ControllerBase
 {
-    private static readonly List<Vehicle> _vehicles = new List<Vehicle>
-    {
-        new Vehicle { Id = 1, Manufacturer = "Bmw", Model = "530", Color = "Black", HorsePower = 250},
-        new Vehicle { Id = 2, Manufacturer = "Mercedes", Model = "GLA", Color = "Grey", HorsePower = 200},
-        new Vehicle { Id = 3, Manufacturer = "Toyota", Model = "Yaris", Color = "Red", HorsePower = 80},
-        new Vehicle { Id = 4, Manufacturer = "Volkswagen", Model = "Golf", Color = "White", HorsePower = 110}
-    };
+
 
     [HttpGet]
     public ActionResult<IEnumerable<Vehicle>> GetAll()
     {
-        return _vehicles;
+        return VehicleService.GetAll();
     }
 
     [HttpGet("{id}")]
     public ActionResult<Vehicle> Get(int id)
     {
-        var vehicle = _vehicles.FirstOrDefault(x => x.Id == id);
+        var vehicle = VehicleService.Get(id);
 
         if (vehicle == default)
         {
@@ -34,27 +30,27 @@ public class VehiclesController : ControllerBase
     [HttpPost]
     public ActionResult Insert(Vehicle vehicle)
     {
-        _vehicles.Add(vehicle);
+        VehicleService.Add(vehicle);
 
-        return CreatedAtAction(nameof(Get), new { id = vehicle.Id }, vehicle);
+        return CreatedAtAction(nameof(Insert), new { id = vehicle.Id }, vehicle);
     }
 
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
-        var vehicle = _vehicles.FirstOrDefault(x => x.Id == id);
+        var vehicle = VehicleService.Get(id);
 
         if (vehicle == default)
         {
             return NotFound();
         }
 
-        _vehicles.RemoveAt(id);
+        VehicleService.Delete(id);
 
         return NoContent();
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public ActionResult Update(int id, Vehicle vehicle)
     {
         if (id != vehicle.Id)
@@ -62,19 +58,15 @@ public class VehiclesController : ControllerBase
             return BadRequest();
         }
 
-        var existingVehicle = _vehicles.FirstOrDefault(x => x.Id == id);
+        var existingVehicle = VehicleService.Get(id);
 
-        if (existingVehicle != default)
-        {
-            existingVehicle.Manufacturer = vehicle.Manufacturer;
-            existingVehicle.Model = vehicle.Model;
-            existingVehicle.Color = vehicle.Color;
-            existingVehicle.HorsePower = vehicle.HorsePower;
-        }
-        else
+        if (existingVehicle == null)
         {
             return NotFound();
+
         }
+
+        VehicleService.Update(vehicle);
 
         return NoContent();
 
